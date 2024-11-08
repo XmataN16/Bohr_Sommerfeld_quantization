@@ -14,7 +14,9 @@ int main()
 	init_X(X);
 	init_V(V, X);
 
-	print_vector(V);
+	//print_vector(V);
+
+	std::cout << gradient_descent1D(X, V, 0.01, 0.01);
 	return 0;
 }
 

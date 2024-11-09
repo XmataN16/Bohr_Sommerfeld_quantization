@@ -1,30 +1,29 @@
 #pragma once
-#include <cmath>
-
-// Метод градиентного спуска для одномерного случая
-double gradient_descent1D(std::vector<double> X, std::vector<double> V, double eps, double alpha)
+// Функция поиска максимума в массиве
+double get_max_array(double* array, int size)
 {
-	// Начальное приближение
-	double X_current = X[X.size() / 2];
-	double V_current = V[X.size() / 2];
+	double max_array = array[0];
 
-	double X_prev, V_prev, gradient;
-
-	do
+    #pragma omp parallel for
+	for (int i = 0; i < size; i++)
 	{
-		// Текущие значения V(x) и x устанавливаем предыдущими
-		X_prev = X_current;
-		V_prev = V_current;
+		if (array[i] > max_array) max_array = array[i];
+	}
 
-		// Расчет градиента
-		gradient = (calc_V(X_prev + dx) - calc_V(X_prev - dx)) / (2*dx);
+	return max_array;
+}
 
-		// Обновление значений V и x (движение в направлении обратном градиенту -grad(V))
-		X_current = X_prev - (alpha * gradient);
-		V_current = calc_V(X_current);
-	} 
-	while (abs(V_current - V_prev) > eps and X_current >= x1 and X_current <= x2); // условие останова
+// Функция поиска минимума в массиве
+double get_min_array(double* array, int size)
+{
+	double min_array = array[0];
 
-	return V_current;
+    #pragma omp parallel for
+	for (int i = 0; i < size; i++)
+	{
+		if (array[i] < min_array) min_array = array[i];
+	}
+
+	return min_array;
 }
 

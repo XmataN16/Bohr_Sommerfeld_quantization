@@ -1,29 +1,27 @@
 #include <iostream>
+#include <algorithm>
+#include <cmath>
 #include <omp.h>
-#include <vector>
 #include <init_functions.h>
 #include <numerical_methods.h>
 
-void print_vector(std::vector<double> vec);
-
 int main()
 {
-	std::vector<double> X;
-	std::vector<double> V;
-	std::vector<double> energy_levels;
-	init_X(X);
-	init_V(V, X);
+	// Инициализируем размеры массивов X и V
+	int size_X = Nx + 1;
+	int size_V = Nx + 1;
 
-	//print_vector(V);
+	// Инициализация массивов X и V значениями
+	double* X = init_X(size_X);
+	double* V = init_V(X, size_V);
 
-	std::cout << gradient_descent1D(X, V, 0.01, 0.01);
-	return 0;
+	double E_min = get_min_array(V, size_V);
+	double E_max = get_max_array(V, size_V);
+
+	std::cout << E_min << " " << E_max << std::endl;
+
+	// Очистка памяти
+	delete[] X;
+	delete[] V;
 }
 
-void print_vector(std::vector<double> vec)
-{
-	for (int i = 0; i < vec.size(); i++)
-	{
-		std::cout << vec[i] << std::endl;
-	}
-}

@@ -1,38 +1,55 @@
 #pragma once
-//Константы
-const double pi = 3.141592653589793;
-
-// Параметры сетки
-const int Nx = 20; // Число узлов по оси Ox
-const int Ne = 100; // Число узлов по оси энергии E
-const double x1 = -2.0; // Левая грань по x
-const double x2 = 2.0; // Правая грань по x
-
-const double dx = (x2 - x1) / double(Nx); // Приращение по оси Ox
-
 // Параметры потенциала
-const double V0 = 20.0; // глубина потенциала
+const double V0 = 20.0;  // глубина потенциала
 const double a = 1.5;  // ширина потенциала
 
-// Функция для задания потенциала V(x)
+const int Nx = 100; // Число узлов вдоль оси Ox
+
+// Границы рассматриваемой области потенциала по x
+const double x1 = -6.0;
+const double x2 = 6.0;
+
+// Приращение по x
+const double dx = (x2 - x1) / Nx;
+
 double calc_V(double x)
 {
-	return(-V0 / (pow(cos(x / a), 2))); // Здесь указывается функция задающая потенциал V(x)
+	return (-V0 / (pow(cosh(x / a), 2)));
 }
 
-
-void init_X(std::vector<double>& X)
+// Инициализация массива X
+double* init_X(int size_x)
 {
-	for (int i = 0; i < Nx + 1; i++)
+	double* X = new double[size_x];
+
+    #pragma omp parallel for
+	for (int i = 0; i < size_x; i++)
 	{
-		X.push_back(x1 + (double(i) * dx));
+		X[i] = x1 + (i * dx);
 	}
+
+	return X;
 }
 
-void init_V(std::vector<double>& V, std::vector<double> X)
+// Инициализация массива V
+double* init_V(double* X, int size_v)
 {
-	for (int i = 0; i < X.size(); i++)
+	double* V = new double[size_v];
+
+    #pragma omp parallel for
+	for (int i = 0; i < size_v; i++)
 	{
-		V.push_back(calc_V(X[i]));
+		V[i] = calc_V(X[i]);
+	}
+
+	return V;
+}
+
+// Функция вывода массива в консоль
+void print_array(double* array, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		std::cout << array[i] << std::endl;
 	}
 }

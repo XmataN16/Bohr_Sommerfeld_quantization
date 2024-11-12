@@ -64,3 +64,32 @@ double integral_middle_rectangles(double a, double b, int N, Func f, Args... arg
 	return sum * dx;
 }
 
+std::list<double> round_levels(const std::list<double>& energy_levels, double tolerance)
+{
+	std::list<double> rounded_levels;
+
+	for (double energy : energy_levels)
+	{
+		// Ищем близкое значение в rounded_levels
+		auto it = std::find_if(rounded_levels.begin(), rounded_levels.end(), [energy, tolerance](double rounded_energy)
+			{
+				return std::abs(energy - rounded_energy) < tolerance;
+			});
+
+		// Если находим близкое значение, заменяем его на среднее арифметическое
+		if (it != rounded_levels.end())
+		{
+			*it = (*it + energy) / 2.0;
+		}
+		// Если близкого значения нет, добавляем текущее значение в результат
+		else
+		{
+			rounded_levels.push_back(energy);
+		}
+	}
+
+	// Сортируем список rounded_levels в порядке возрастания
+	rounded_levels.sort();
+
+	return rounded_levels;
+}

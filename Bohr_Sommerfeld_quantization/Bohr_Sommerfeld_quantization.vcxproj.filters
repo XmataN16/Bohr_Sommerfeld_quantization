@@ -26,5 +26,8 @@
     <ClInclude Include="init_functions.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="IO_functions.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
